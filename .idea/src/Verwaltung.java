@@ -17,6 +17,7 @@ public class Verwaltung {
         System.out.println("|-------------------------|");
 
         Scanner sc = new Scanner(System.in);
+
         int eingabe = sc.nextInt();
 
         while(eingabe != 6){
@@ -40,6 +41,15 @@ public class Verwaltung {
 
             }
 
+            System.out.println("|-------------------------|");
+            System.out.println("|-------Hauptmenü---------|");
+            System.out.println("|                         |");
+            System.out.println("|-(1)bestellen           -|");
+            System.out.println("|-(2)ausliefern          -|");
+            System.out.println("|-(3)informationen       -|");
+            System.out.println("|-(4)loeschen            -|");
+            System.out.println("|-(5)hilfe  (6)ausloggen -|");
+            System.out.println("|-------------------------|");
             eingabe = sc.nextInt();
         }
 
