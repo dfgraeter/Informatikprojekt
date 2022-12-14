@@ -13,6 +13,7 @@ public class Verwaltung {
         System.out.println("|-(4)loeschen            -|");
         System.out.println("|-(5)help   (6)ausloggen -|");
         System.out.println("|-------------------------|");
+        System.out.println(ANSI_RED + "Schreiben" + ANSI_RESET);
 
 
 
