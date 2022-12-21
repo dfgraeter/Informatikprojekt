@@ -84,8 +84,8 @@ public class Konsole {
                                 System.out.println("Name: " + BLAU + strings[0] + STANDARD + ", Anzahl: " + BLAU + strings[1] + STANDARD + ", Einzelpreis: " + BLAU + strings[2] + STANDARD +
                                         ", Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + ", Gesamtpreis: " + BLAU + strings[4] + STANDARD);
                             }else{
-                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Einzelpreis: " + BLAU + strings[2] + STANDARD +
-                                        " Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + " Gesamtpreis: " + BLAU + strings[4] + STANDARD);
+                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + ", Anzahl: " + BLAU + strings[1] + STANDARD + ", Einzelpreis: " + BLAU + strings[2] + STANDARD +
+                                        ", Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + ", Gesamtpreis: " + BLAU + strings[4] + STANDARD);
                             }
                             break;
                         case 2:
