@@ -90,9 +90,9 @@ public class Konsole {
                             break;
                         case 2:
                             if(!ueberpruefenAbgelaufen(datum, strings[3])){
-                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + "Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
+                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
                             }else{
-                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + "Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
+                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
                             }
                             break;
                     }
