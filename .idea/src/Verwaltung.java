@@ -33,7 +33,6 @@ public class Verwaltung {
                     System.out.println("Was wollen Sie löschen?");
                     break;
                 case 5:
-                    System.out.println("Hilfe");
                     Konsole.hilfe();
                     break;
 
