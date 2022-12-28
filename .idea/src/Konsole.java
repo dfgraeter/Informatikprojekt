@@ -11,6 +11,7 @@ public class Konsole {
     private static final Date date = new Date();
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     private static final String datum = formatter.format(date);
+    private static File file = new File(".idea/src/Files/Medikamentenliste");
 
     public static void hilfe() {
         System.out.println("Hilfe: ");
@@ -36,13 +37,13 @@ public class Konsole {
         while(eingabe != 0){
             switch (eingabe) {
                 case 1:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte bestellen." + STANDARD);
+                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte bestellen. Der Befehl verändert die Anzahl der Medikamente" + STANDARD);
                     break;
                 case 2:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte ausliefern." + STANDARD);
+                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte ausliefern. Der Befehl verändert die Anzahl der Medikamente" + STANDARD);
                     break;
                 case 3:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Informationen zu den Produkten und Ihrem " +
+                    System.out.println(BLAU + "Mit diesem Befehl können Sie Informationen zu den Produkten in Ihrem " +
                             "Lager erhalten." + STANDARD);
                     break;
                 case 4:
@@ -76,7 +77,7 @@ public class Konsole {
         Scanner infSc = new Scanner(System.in);
         int eingabe = infSc.nextInt();
 
-        File file = new File(".idea/src/Files/Medikamentenliste");
+
         String zeile;
         while (eingabe != 0) {
 
@@ -126,7 +127,7 @@ public class Konsole {
 
                     }
                 }
-
+                reader.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -138,6 +139,50 @@ public class Konsole {
 
     }
 
+    public static void loeschen() {
+        System.out.println("Was wollen Sie löschen?");
+        System.out.println(ROT + "1: " + STANDARD + "Alles");
+        System.out.println(ROT + "2: " + STANDARD + "Alle abgelaufenen Medikamente");
+        System.out.println(ROT + "3: " + STANDARD + "Individuell");
+
+        String zeile;
+        Scanner loeSc = new Scanner(System.in);
+        int eingabe = loeSc.nextInt();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            while ((zeile = reader.readLine()) != null) {
+                if (eingabe == 1) {
+                    writer.write("");
+                    writer.close();
+                    reader.close();
+                } else if (zeile.contains("Name")) {
+                    continue;
+                } else {
+                    String[] strings = zeile.split(";");
+                    switch (eingabe) {
+                        case 2:
+                            if (ueberpruefenAbgelaufen(strings[3])) {
+                                continue;
+                            } else {
+                                writer.write("");
+                            }
+
+                            break;
+                        case 3:
+                            break;
+                    }
+                }
+
+
+            }
+
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+
+    }
 
 
     /**

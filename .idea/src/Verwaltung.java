@@ -30,7 +30,7 @@ public class Verwaltung {
                     Konsole.informationen();
                     break;
                 case 4:
-                    System.out.println("Was wollen Sie löschen?");
+                    Konsole.loeschen();
                     break;
                 case 5:
                     Konsole.hilfe();
