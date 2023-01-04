@@ -35,7 +35,7 @@ public class Konsole {
         Scanner hilfeSc = new Scanner(System.in);
 
         int eingabe = hilfeSc.nextInt();
-        while(eingabe != 0){
+        while (eingabe != 0) {
             switch (eingabe) {
                 case 1:
                     System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte bestellen. Der Befehl verändert die Anzahl der Medikamente" + STANDARD);
@@ -89,10 +89,10 @@ public class Konsole {
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 while ((zeile = reader.readLine()) != null) {
-                    if (zeile.contains("Name")) {
+                    if (zeile.contains("Name")) {                                   // Excel Überspringt erste Spalte
                         continue;
                     } else {
-                        String[] strings = zeile.split(";");
+                        String[] strings = zeile.split(";");                   // An welchem Sysmbol es Gesplitetet werden soll
 
                         switch (eingabe) {
                             case 1:
