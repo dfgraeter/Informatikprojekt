@@ -18,8 +18,8 @@ public class Verwaltung {
 
         int eingabe = sc.nextInt();
 
-        while(eingabe != 6){
-            switch (eingabe){
+        while (eingabe != 6) {
+            switch (eingabe) {
                 case 1:
                     System.out.println("Was wollen Sie bestellen?");
                     break;
@@ -49,7 +49,6 @@ public class Verwaltung {
             System.out.println("|-------------------------|");
             eingabe = sc.nextInt();
         }
-
 
 
     }
