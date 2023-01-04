@@ -52,6 +52,7 @@ public class Konsole {
                     break;
                 case 5:
                     System.out.println(BLAU + "Hilfe ist selbsterklärend glauben wir ;)" + STANDARD);
+                    break;
                 case 6:
                     System.out.println(BLAU + "Mit diesem Befehl loggen Sie sich aus, das Programm wird beendet." + STANDARD);
                     break;

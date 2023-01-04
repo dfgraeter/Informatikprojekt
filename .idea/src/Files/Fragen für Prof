@@ -1,10 +1,21 @@
 Jede Methode eigenen Scanner oder ein static Scanner?
 Backup liste eine update methode hizufügen
+
 Sortieren nach Mind. Haltbarkeitsdatum
+
 Löschen von abgelaufenen produkten, hilfe arraylist und arrays, dann wieder in datei schreiben
+
 Suche mit contains nach anfangsbuchstaben und wörtern
+
 bestellen wir kaufen
+
 ausliefern wir verkaufen
+
 eine logfile? file für ausgaben und einnahmen?
-automatisches bestellen
+
+Produkt bestellen und alle werte selber Schreiben Name etc.
+
+Produkt wird gelöscht wenn die anzahl = 0 ist.
+Wenn das Produkt immer noch einen Bestand hat dann bleibt es bestehen.
+Bei einer zu großen bestellung kommt eine Fehlermeldung.
 
