@@ -50,6 +50,8 @@ public class Konsole {
                 case 4:
                     System.out.println(BLAU + "Mit diesem Befehl können Sie alle abgelaufenen Produkte löschen." + STANDARD);
                     break;
+                case 5:
+                    System.out.println(BLAU + "Hilfe ist selbsterklärend glauben wir ;)" + STANDARD);
                 case 6:
                     System.out.println(BLAU + "Mit diesem Befehl loggen Sie sich aus, das Programm wird beendet." + STANDARD);
                     break;
