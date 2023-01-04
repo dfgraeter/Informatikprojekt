@@ -13,6 +13,7 @@ public class Konsole {
     private static final String datum = formatter.format(date);
     private static File file = new File(".idea/src/Files/Medikamentenliste");
 
+
     public static void hilfe() {
         System.out.println("Hilfe: ");
         System.out.println("|--------------------|");
@@ -47,7 +48,7 @@ public class Konsole {
                             "Lager erhalten." + STANDARD);
                     break;
                 case 4:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte löschen." + STANDARD);
+                    System.out.println(BLAU + "Mit diesem Befehl können Sie alle abgelaufenen Produkte löschen." + STANDARD);
                     break;
                 case 6:
                     System.out.println(BLAU + "Mit diesem Befehl loggen Sie sich aus, das Programm wird beendet." + STANDARD);
@@ -62,6 +63,10 @@ public class Konsole {
 
 
     }
+
+    /**
+     * Erweitern mit aktiver Suche
+     */
 
     public static void informationen() {
 
@@ -138,6 +143,11 @@ public class Konsole {
         }
 
     }
+
+    /**
+     *loeschen begrenzen auf alle abgelaufenen sonst nichts machen mit löschen!!!
+     * zur Not ArrayList<zeile[]> zeilen = new ArrayList<>(); und dann neu in file schreiben und mit remove
+     */
 
     public static void loeschen() {
         System.out.println("Was wollen Sie löschen?");
