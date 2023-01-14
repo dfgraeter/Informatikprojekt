@@ -165,7 +165,7 @@ public class Konsole {
 
             System.out.println(BLAU+"Was wollen Sie bestellen?"+STANDARD);
             System.out.print("Name: ");
-            String name = scanner.nextLine();
+            String name = scanner.next();
 
             System.out.print("Anzahl: ");
             String anzahl = scanner.next();
