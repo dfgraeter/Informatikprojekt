@@ -1,237 +1,248 @@
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Konsole {
     public static final String ROT = "\u001B[31m";
     public static final String BLAU = "\u001B[34m";
     public static final String STANDARD = "\u001B[0m";
-    private static final Date date = new Date();
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    private static final String datum = formatter.format(date);
-    private static File file = new File(".idea/src/Files/Medikamentenliste");
+    public static Scanner scanner = new Scanner(System.in);
 
 
-    public static void hilfe() {
-        System.out.println("Hilfe: ");
-        System.out.println("|--------------------|");
-        System.out.println("|  Mögliche Befehle  |");
-        System.out.println("|                    |");
-        System.out.println("|   (1)bestellen     |");
-        System.out.println("|   (2)ausliefern    |");
-        System.out.println("|   (3)informationen |");
-        System.out.println("|   (4)loeschen      |");
-        System.out.println("|   (6)ausloggen     |");
-        System.out.println("|                    |");
-        System.out.println("|--------------------|");
-        System.out.println();
-        System.out.println("Schreiben Sie die " + ROT + "Zahl" + STANDARD + ", welche " +
-                "neben dem Befehl steht um diesen auszuführen.");
-        System.out.println("Für genauere Hilfe schreiben Sie " + ROT + "Zahl" + STANDARD);
-        System.out.println("Beispiel: 10 für detallierte Informationen über den bestellen-Befehl");
-        System.out.println("Wenn Sie fertig sind schreiben Sie: " + ROT + "0" + STANDARD);
-        Scanner hilfeSc = new Scanner(System.in);
+    /**
+     * startet das Programm und dient als Hauptmenü, um zu entscheiden was man machen möchte
+     */
+    public void start() {
 
-        int eingabe = hilfeSc.nextInt();
-        while (eingabe != 0) {
+        int eingabe;
+        do {
+            System.out.println("|-------------------------|");
+            System.out.println("|-------Hauptmenü---------|");
+            System.out.println("|                         |");
+            System.out.println("| (1)bestellen            |");
+            System.out.println("| (2)ausliefern           |");
+            System.out.println("| (3)informationen        |");
+            System.out.println("| (4)loeschen             |");
+            System.out.println("| (5)sortieren & ausgeben |");
+            System.out.println("| (6)drucken              |");
+            System.out.println("| (7)ausloggen            |");
+            System.out.println("|                         |");
+            System.out.println("|-------------------------|");
+            eingabe = scanner.nextInt();
+
             switch (eingabe) {
                 case 1:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte bestellen. Der Befehl verändert die Anzahl der Medikamente" + STANDARD);
+                    bestellen();
                     break;
                 case 2:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Produkte ausliefern. Der Befehl verändert die Anzahl der Medikamente" + STANDARD);
+                    ausliefern();
                     break;
                 case 3:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie Informationen zu den Produkten in Ihrem " +
-                            "Lager erhalten." + STANDARD);
+                    informationen();
                     break;
                 case 4:
-                    System.out.println(BLAU + "Mit diesem Befehl können Sie alle abgelaufenen Produkte löschen." + STANDARD);
+                    loeschen();
                     break;
                 case 5:
-                    System.out.println(BLAU + "Hilfe ist selbsterklärend glauben wir ;)" + STANDARD);
+                    sortierenUndAusgeben();
+                    break;
                     break;
                 case 6:
-                    System.out.println(BLAU + "Mit diesem Befehl loggen Sie sich aus, das Programm wird beendet." + STANDARD);
+                    drucken();
                     break;
-            }
-            System.out.println();
-            System.out.println("Für genauere Hilfe schreiben Sie " + ROT + "Zahl" + STANDARD);
-            System.out.println("Beispiel: 10 für detallierte Informationen über den bestellen-Befehl");
-            System.out.println("Wenn Sie fertig sind schreiben Sie: " + ROT + "0" + STANDARD);
-            eingabe = hilfeSc.nextInt();
-        }
-
-
-    }
-
-    /**
-     * Erweitern mit aktiver Suche
-     */
-
-    public static void informationen() {
-
-        System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
-        System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
-        System.out.println(ROT + "1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
-        System.out.println(ROT + "2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
-        System.out.println(ROT + "3: " + STANDARD + "Für alle Medikamente mit Anzahl");
-        System.out.println(ROT + "4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
-        System.out.println(ROT + "5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
-
-
-        Scanner infSc = new Scanner(System.in);
-        int eingabe = infSc.nextInt();
-
-
-        String zeile;
-        while (eingabe != 0) {
-
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                while ((zeile = reader.readLine()) != null) {
-                    if (zeile.contains("Name")) {                                   // Excel Überspringt erste Spalte
-                        continue;
-                    } else {
-                        String[] strings = zeile.split(";");                   // An welchem Sysmbol es Gesplitetet werden soll
-
-                        switch (eingabe) {
-                            case 1:
-                                if (!ueberpruefenAbgelaufen(strings[3])) {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Einzelpreis: " + BLAU + strings[2] + STANDARD +
-                                            " Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + " Gesamtpreis: " + BLAU + strings[4] + STANDARD);
-                                } else {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Einzelpreis: " + BLAU + strings[2] + STANDARD +
-                                            " Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + " Gesamtpreis: " + BLAU + strings[4] + STANDARD);
-                                }
-                                break;
-                            case 2:
-                                if (!ueberpruefenAbgelaufen(strings[3])) {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                                } else {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                                }
-                                break;
-                            case 3:
-                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD);
-                                break;
-                            case 4:
-                                System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Preis: " + BLAU + strings[2] + STANDARD);
-                                break;
-                            case 5:
-                                if (!ueberpruefenAbgelaufen(strings[3])) {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Preis: " + BLAU + strings[2] + STANDARD +
-                                            " Mindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                                } else {
-                                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + " Anzahl: " + BLAU + strings[1] + STANDARD + " Preis: " + BLAU + strings[2] + STANDARD +
-                                            " Mindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                                }
-                                break;
-
-                        }
-
-
-                    }
-                }
-                reader.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-            System.out.println("Wollen Sie weitere Informationen abrufen?");
-            System.out.println(ROT + "0: " + STANDARD + "Nein");
-            System.out.println("Sonst eine Zahl von 1-5 für die jeweilige Information.");
-            eingabe = infSc.nextInt();
-        }
-
-    }
-
-    /**
-     *loeschen begrenzen auf alle abgelaufenen sonst nichts machen mit löschen!!!
-     * zur Not ArrayList<zeile[]> zeilen = new ArrayList<>(); und dann neu in file schreiben und mit remove
-     */
-
-    public static void loeschen() {
-        System.out.println("Was wollen Sie löschen?");
-        System.out.println(ROT + "1: " + STANDARD + "Alles");
-        System.out.println(ROT + "2: " + STANDARD + "Alle abgelaufenen Medikamente");
-        System.out.println(ROT + "3: " + STANDARD + "Individuell");
-
-        String zeile;
-        Scanner loeSc = new Scanner(System.in);
-        int eingabe = loeSc.nextInt();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            while ((zeile = reader.readLine()) != null) {
-                if (eingabe == 1) {
-                    writer.write("");
-                    writer.close();
-                    reader.close();
-                } else if (zeile.contains("Name")) {
-                    continue;
-                } else {
-                    String[] strings = zeile.split(";");
-                    switch (eingabe) {
-                        case 2:
-                            if (ueberpruefenAbgelaufen(strings[3])) {
-                                continue;
-                            } else {
-                                writer.write("");
-                            }
-
-                            break;
-                        case 3:
-                            break;
-                    }
-                }
-
 
             }
+        } while (7 != eingabe);
 
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        System.out.println("Soll die File überschrieben werden?");
+        System.out.println("1: Ja");
+        System.out.println("Irgendeine andere Eingabe steht für ein nein");
+
+        if(scanner.nextLine().equals("1")){
+            Verwaltung.update();
         }
 
 
     }
 
 
+
+
+
     /**
-     * Wenn false dann ist es abgelaufen, bei true nicht.
      *
-     * @param datumMed
-     * @return
      */
+    public static void informationen() {
+        Verwaltung verwaltung = new Verwaltung();
+        int eingabe;
+        do {
 
-    private static boolean ueberpruefenAbgelaufen(String datumMed) {
-        if (datum.equals(datumMed)) {
-            return true;
-        } else {
-            String[] stringsHeute = datum.split("\\.");
-            int jahrHeute = Integer.parseInt(stringsHeute[2]);
-            int monatHeute = Integer.parseInt(stringsHeute[1]);
-            int tagHeute = Integer.parseInt(stringsHeute[0]);
-            String[] stringsMed = datumMed.split("\\.");
-            int jahrMed = Integer.parseInt(stringsMed[2]);
-            int monatMed = Integer.parseInt(stringsMed[1]);
-            int tagMed = Integer.parseInt(stringsMed[0]);
+            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
+            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
+            System.out.println(ROT + "1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
+            System.out.println(ROT + "2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
+            System.out.println(ROT + "3: " + STANDARD + "Für alle Medikamente mit Anzahl");
+            System.out.println(ROT + "4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
+            System.out.println(ROT + "5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
+            eingabe = scanner.nextInt();
+            verwaltung.ausgabeInformationen(eingabe);
 
-            if (jahrMed < jahrHeute) {
-                return false;
-            } else if (jahrMed == jahrHeute) {
-                if (monatMed < monatHeute) {
-                    return false;
-                } else if (monatMed == monatHeute) {
-                    if (tagMed < tagHeute) {
-                        return false;
-                    }
-                }
-            }
+        } while (eingabe != 0);
+    }
+
+
+    /**
+     *
+     */
+    public static void sortierenUndAusgeben(){
+        Verwaltung verwaltung = new Verwaltung();
+        int eingabe;
+        do {
+
+            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
+            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
+            System.out.println(ROT + "1x" + STANDARD + "Sortieren nach Datum und dann eine der Optionen von unten");
+            System.out.println(ROT + "2x" + STANDARD + "Sortieren nach Name und dann eine der Optionen von unten");
+            System.out.println(ROT + "(1/2)1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
+            System.out.println(ROT + "(1/2)2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
+            System.out.println(ROT + "(1/2)3: " + STANDARD + "Für alle Medikamente mit Anzahl");
+            System.out.println(ROT + "(1/2)4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
+            System.out.println(ROT + "(1/2)5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
+            eingabe = scanner.nextInt();
+            verwaltung.ausgabeSortierteInformationen(eingabe);
+
+        } while (eingabe != 0);
+
+
+
+    }
+
+    /**
+     *
+     */
+    public static void ausliefern() {
+        Verwaltung verwaltung = new Verwaltung();
+        System.out.println("Wie viele Medikamente wollen Sie ausliefern?");
+        System.out.print("Anzahl Medikamente: ");
+        int sizevorbestellung = Verwaltung.getFileListe().size();
+        int x = scanner.nextInt();
+        for (int i = 0; i < x; i++){
+
+            System.out.println(BLAU+"Was wollen Sie ausliefern?"+STANDARD);
+            System.out.print("Name: ");
+            String name = scanner.next();
+            System.out.print("Anzahl: ");
+            String anzahl = scanner.next();
+            verwaltung.ausliefernMed(name, anzahl);
 
         }
-        return true;
+
+        double summe = 0;
+        System.out.println("Auslieferübersicht: ");
+        for(int i = sizevorbestellung; i < Verwaltung.getFileListe().size(); i++){
+            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
+                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
+
+            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
+        }
+
+        System.out.println();
+        System.out.println("Sie erhalten: " + summe +"€ von Ihrem Kunden");
+
+
     }
+
+    /**
+     *
+     */
+    public static void bestellen() {
+        Verwaltung verwaltung = new Verwaltung();
+        System.out.println("Wie viele Medikamente wollen Sie bestellen?");
+        System.out.print("Anzahl Medikamente: ");
+        int sizevorbestellung = Verwaltung.getFileListe().size();
+        int x = scanner.nextInt();
+        for (int i = 0; i < x; i++){
+
+            System.out.println(BLAU+"Was wollen Sie bestellen?"+STANDARD);
+            System.out.print("Name: ");
+            String name = scanner.next();
+            System.out.print("Anzahl: ");
+            String anzahl = scanner.next();
+            verwaltung.bestellenMed(name, anzahl);
+
+        }
+
+        double summe = 0;
+        System.out.println("Bestellübersicht: ");
+        for(int i = sizevorbestellung; i < Verwaltung.getFileListe().size(); i++){
+            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
+                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
+
+            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
+        }
+
+        System.out.println();
+        System.out.println("Summe: " + summe +"€");
+
+
+
+    }
+
+    /**
+     *
+     */
+    public static void loeschen() {
+        System.out.println(BLAU+"Welche Medikamente wollen Sie löschen"+STANDARD);
+        System.out.println();
+
+    }
+    public static void drucken(){
+
+        Verwaltung verwaltung = new Verwaltung();
+        System.out.println(BLAU+"Wie soll Ihre Datei heißen?"+STANDARD);
+        System.out.print("Name: ");
+        String dateiName = scanner.next();
+
+        System.out.println(BLAU+"Was wollen Sie drucken?"+STANDARD);
+        System.out.println(ROT + "1: " + STANDARD + "Einfach die File drucken.");
+        System.out.println(ROT + "2: " + STANDARD + "File sortieren und dann drucken.");
+        System.out.println(ROT + "3: " + STANDARD + "Ein Anfangsbuchstaben suchen und alle Einträge dazu drucken.");
+        System.out.println(ROT + "4: " + STANDARD + "Ein Anfangsbuchstaben suchen und alle Einträge dazu sortiert drucken.");
+        System.out.println(BLAU + "Hinweis: " + STANDARD + "Es wird nach Namen oder nach  Mindesthaltbarkeitdatum sortiert. Sie entscheiden.");
+
+        int eingabe = scanner.nextInt();
+        String buchstabe;
+
+        switch(eingabe){
+            case 1:
+                verwaltung.druckenInformationen(dateiName);
+                break;
+            case 2:
+                System.out.println(ROT + "1" + STANDARD + "Sortieren nach Datum");
+                System.out.println(ROT + "2" + STANDARD + "Sortieren nach Name");
+                eingabe = scanner.nextInt();
+                verwaltung.druckenInformationen(dateiName, eingabe);
+                break;
+            case 3:
+                System.out.print("Anfangsbuchstabe: ");
+                buchstabe = scanner.next();
+                verwaltung.druckenInformationen(dateiName, buchstabe);
+                break;
+            case 4:
+                System.out.print("Anfangsbuchstabe: ");
+                buchstabe = scanner.next();
+                System.out.println(ROT + "1" + STANDARD + "Sortieren nach Datum");
+                System.out.println(ROT + "2" + STANDARD + "Sortieren nach Name");
+                eingabe = scanner.nextInt();
+                verwaltung.druckenInformationen(dateiName,buchstabe,eingabe);
+                break;
+        }
+
+
+
+
+
+
+
+    }
+
 
 }
