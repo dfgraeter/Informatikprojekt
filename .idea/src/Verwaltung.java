@@ -352,29 +352,20 @@ public class Verwaltung extends Konsole {
      * @param dateiName
      */
     public void druckenInformationen(String dateiName) {
-        File neueFile = new File("src/Files/" + dateiName);
-        int gesamtAnzahl = 0;
-
-        if(fileListe.isEmpty()){
-            System.out.println("Die Liste ist leer");
+        BufferedWriter writer = null;
+        if (fileListe.isEmpty()) {
+            System.out.println("Die Liste ist leer, es kann keine Datei erstellt werden.");
             return;
         }
-        if(neueFile.exists()){
-            System.out.println("Die Datei existiert bereits, möchten Sie sie überschreiben? (j/n)");
-            String antwort = scanner.next();
-            if(!antwort.equals("j")){
-                return;
-            }
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
+        try {
+            File neueFile = new File("src/Files/" + dateiName);
+            int gesamtAnzahl = 0;
+
+            writer = new BufferedWriter(new FileWriter(neueFile));
             writer.write("Heute ist der: " + datum);
             writer.newLine();
             for (String[] zeile : fileListe) {
-                if(zeile.length<5){
-                    System.out.println("Die Liste ist nicht vollständig");
-                    return;
-                }
-                writer.write("Name: " + zeile[0] +" Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
                         " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
                 writer.newLine();
                 gesamtAnzahl += Integer.parseInt(zeile[1]);
@@ -383,10 +374,12 @@ public class Verwaltung extends Konsole {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
