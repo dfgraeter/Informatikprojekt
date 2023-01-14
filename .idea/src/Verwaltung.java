@@ -107,7 +107,7 @@ public class Verwaltung extends Konsole {
             System.out.println("Dieses Medikament existiert nicht");
         }
         }
-
+f
     /**
      *
      * @param eingabe
