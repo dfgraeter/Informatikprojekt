@@ -195,7 +195,25 @@ public class Konsole {
         System.out.println(BLAU+"Welche Medikamente wollen Sie löschen"+STANDARD);
         System.out.println(ROT + "1: " + STANDARD + "Lösche alle Medikamente die das Minedesthaltbarkeritsdatum überschritten haben");
         System.out.println(ROT + "2: " + STANDARD + "Lösche ein bestmmtes Medikament");
-        String eingabe = scanner.next();
+        int eingabe = scanner.nextInt();
+        switch(eingabe) {
+            case 1:
+                System.out.println("Sind sie sich sicher das sie es Löschen wollen?");
+                System.out.println("1: Ja");
+                System.out.println("Irgendeine andere Eingabe steht für ein nein");
+                int antwort = scanner.nextInt();
+                if(antwort == 1){
+                    verwaltung.loeschenMed();
+                }
+                break;
+            case 2:
+                System.out.println("Nach welchem Medikament suchen Sie?");
+                System.out.println("Name: ");
+                String name = scanner.next();
+                verwaltung.druckenInformationen(name);
+                break;
+        }
+
     }
 
     /**
