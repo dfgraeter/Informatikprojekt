@@ -94,7 +94,7 @@ public class Verwaltung extends Konsole {
             }
         }
     }
-    public void loeschenNameMed(int antwort,String name) {
+    public void loeschenNameMed(String name) {
         boolean medikamentGefunden = false;
         for (String[] zeile : fileListe) {
             if (zeile[0].equals(name)) {
