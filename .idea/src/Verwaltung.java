@@ -84,17 +84,20 @@ public class Verwaltung extends Konsole {
     }
 
 
-    public void loeschenMed(int antwort) {
-                    for (String[] zeile : fileListe) {
-                        if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
-                            fileListe.remove(zeile);
-                        }
-                    }
+    public void loeschenMed() {
+        for (String[] zeile : fileListe) {
+            if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
+                fileListe.remove(zeile);
+            }
+        }
     }
     public void loeschenNameMed(int antwort,String name) {
         for (String[] zeile : fileListe) {
             if (zeile[0].equals(name)) {
                 fileListe.remove(zeile);
+            }
+            else{
+                System.out.println("Dieses Medikament existiert nicht                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ");
             }
         }
     }
