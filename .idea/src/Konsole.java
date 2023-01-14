@@ -157,9 +157,6 @@ public class Konsole {
         Verwaltung verwaltung = new Verwaltung();
         int eingabe;
         do {
-        System.out.println(BLAU+"Welche Medikamente wollen Sie löschen"+STANDARD);
-        System.out.println();
-
         System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
         System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
         System.out.println(ROT + "1: " + STANDARD + "Löschen von allen Medikamenten deren Ablaufdatum überschritten ist");

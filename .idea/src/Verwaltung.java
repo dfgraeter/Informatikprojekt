@@ -76,13 +76,9 @@ public class Verwaltung extends Konsole{
     public void loeschenMed(int eingabe) {
         switch (eingabe) {
             case 1:
-                for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
+                for (String[] zeile : fileListe) {
+                    if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
+                        fileListe.remove(zeile);
                     }
                 }
                 break;
@@ -96,11 +92,7 @@ public class Verwaltung extends Konsole{
                 }
 
                 //Alternativ: fileListe.removeIf(zeile -> !ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0);
-                for (String[] zeile : fileListe) {
-                    if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
-                        fileListe.remove(zeile);
-                    }
-                }
+
 
         }
     }
