@@ -44,7 +44,6 @@ public class Konsole {
                 case 5:
                     sortierenUndAusgeben();
                     break;
-                    break;
                 case 6:
                     drucken();
                     break;

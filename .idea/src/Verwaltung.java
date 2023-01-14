@@ -28,7 +28,7 @@ public class Verwaltung extends Konsole{
             e.printStackTrace();
         }
 
-j
+
     }
 
     public void bestellenMed(String name, String anzahl) {
