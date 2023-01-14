@@ -7,7 +7,7 @@ public class Verwaltung extends Konsole {
     private static final Date date = new Date();
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     private static final String datum = formatter.format(date);
-    private static final File file = new File("src/Files/Medikamentenliste");
+    private static final File file = new File(".idea/src/Files/Medikamentenliste");
     private static ArrayList<String[]> fileListe = new ArrayList<>();
 
 
@@ -84,15 +84,25 @@ public class Verwaltung extends Konsole {
     }
 
 
-    public void loeschenMed() {
-
-
-        //Alternativ: fileListe.removeIf(zeile -> !ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0);
-        for (String[] zeile : fileListe) {
-            if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
-                fileListe.remove(zeile);
-            }
+    public void loeschenMed(int eingabe) {
+        switch (eingabe) {
+            case 1:
+                    for (String[] zeile : fileListe) {
+                        if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
+                            fileListe.remove(zeile);
+                        }
+                    }
+                break;
+            case 2:
+                for (String[] zeile : fileListe) {
+                    if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
+                        fileListe.remove(zeile);
+                    }
+                }
+                break;
         }
+        //Alternativ: fileListe.removeIf(zeile -> !ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0);
+
 
 
     }
