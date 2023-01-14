@@ -355,23 +355,40 @@ public class Verwaltung extends Konsole {
         File neueFile = new File("src/Files/" + dateiName);
         int gesamtAnzahl = 0;
 
+        if(fileListe.isEmpty()){
+            System.out.println("Die Liste ist leer");
+            return;
+        }
+        if(neueFile.exists()){
+            System.out.println("Die Datei existiert bereits, möchten Sie sie überschreiben? (j/n)");
+            String antwort = scanner.next();
+            if(!antwort.equals("j")){
+                return;
+            }
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
-
             writer.write("Heute ist der: " + datum);
             writer.newLine();
             for (String[] zeile : fileListe) {
-                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                if(zeile.length<5){
+                    System.out.println("Die Liste ist nicht vollständig");
+                    return;
+                }
+                writer.write("Name: " + zeile[0] +" Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
                         " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
                 writer.newLine();
                 gesamtAnzahl += Integer.parseInt(zeile[1]);
             }
             writer.write("Insgesamte Anzahl an Medizinischen Produkten im Lager: " + gesamtAnzahl);
-
-
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     /**
