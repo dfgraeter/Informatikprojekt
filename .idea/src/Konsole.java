@@ -15,7 +15,7 @@ public class Konsole {
      */
 
     public void start() {
-        Verwaltung = new verwaltung();
+        verwaltung = new verwaltung();
         int eingabe;
         do {
             System.out.println("|-------------------------|");
