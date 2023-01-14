@@ -209,7 +209,7 @@ public class Konsole {
             case 2:
                 System.out.println("Nach welchem Medikament suchen Sie?");
                 System.out.println("Name: ");
-                String name = scanner.nextLine();
+                String name = scanner.next();
                 verwaltung.loeschenNameMed(name);
                 break;
         }
