@@ -95,18 +95,22 @@ public class Verwaltung extends Konsole {
         }
     }
     public void loeschenNameMed(String name) {
-        boolean medikamentGefunden = false;
-        for (String[] zeile : fileListe) {
+        Iterator<String[]> iterator = fileListe.iterator();
+        boolean found = false;
+        while (iterator.hasNext()) {
+            String[] zeile = iterator.next();
             if (zeile[0].equals(name)) {
-                fileListe.remove(zeile);
-                medikamentGefunden = true;
+                iterator.remove();
+                found = true;
                 break;
             }
         }
-        if (!medikamentGefunden) {
-            System.out.println("Dieses Medikament existiert nicht");
+        if(found) {
+            System.out.println("Medikament " + name + " erfolgreich gelöscht.");
+        } else {
+            System.out.println("Medikament " + name + " konnte nicht gefunden werden.");
         }
-        }
+    }
 
     /**
      *
