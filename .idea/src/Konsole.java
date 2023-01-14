@@ -122,20 +122,23 @@ public class Konsole {
         System.out.println("Wie viele Medikamente wollen Sie ausliefern?");
         System.out.print("Anzahl Medikamente: ");
         int x = scanner.nextInt();
-        try{
+
         for (int i = 0; i < x; i++){
 
             System.out.println(BLAU+"Was wollen Sie ausliefern?"+STANDARD);
             System.out.print("Name: ");
             String name = scanner.next();
             System.out.print("Anzahl: ");
-            String anzahl = scanner.next();
-            verwaltung.ausliefernMed(name, anzahl);
-
-        }}catch(IllegalArgumentException e){
-            System.out.println(e.getMessage());
-
+            int anzahl = scanner.nextInt();
+            try{
+                verwaltung.ausliefernMed(name, anzahl);
+                System.out.println("Medikament " + name + " erfolgreich ausgeliefert.");
+            } catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+                i--;
+            }
         }
+    }
 
 
         double summe = 0;
