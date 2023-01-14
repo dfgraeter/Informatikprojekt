@@ -353,12 +353,16 @@ public class Verwaltung extends Konsole {
      */
     public void druckenInformationen(String dateiName) {
         BufferedWriter writer = null;
+        File file = new File("src/Files");
+        if(!file.exists()){
+            file.mkdir();
+        }
+        File neueFile = new File("src/Files/" + dateiName);
         if (fileListe.isEmpty()) {
             System.out.println("Die Liste ist leer, es kann keine Datei erstellt werden.");
             return;
         }
         try {
-            File neueFile = new File("src/Files/" + dateiName);
             int gesamtAnzahl = 0;
 
             writer = new BufferedWriter(new FileWriter(neueFile));
@@ -383,6 +387,7 @@ public class Verwaltung extends Konsole {
             }
         }
     }
+
 
     /**
      *
