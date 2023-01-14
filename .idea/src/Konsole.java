@@ -240,8 +240,8 @@ public class Konsole {
                 verwaltung.druckenInformationen(dateiName);
                 break;
             case 2:
-                System.out.println(ROT + "1" + STANDARD + "Sortieren nach Datum");
-                System.out.println(ROT + "2" + STANDARD + "Sortieren nach Name");
+                System.out.println(ROT + "1:" + STANDARD + " Sortieren nach Datum");
+                System.out.println(ROT + "2:" + STANDARD + " Sortieren nach Name");
                 eingabe = scanner.nextInt();
                 verwaltung.druckenInformationen(dateiName, eingabe);
                 break;

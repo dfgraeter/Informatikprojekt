@@ -2,6 +2,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 public class Verwaltung extends Konsole {
     private static final Date date = new Date();
@@ -85,22 +86,28 @@ public class Verwaltung extends Konsole {
 
 
     public void loeschenMed() {
-        for (String[] zeile : fileListe) {
+        Iterator<String[]> iterator = fileListe.iterator();
+        while (((Iterator<?>) iterator).hasNext()) {
+            String[] zeile = iterator.next();
             if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
-                fileListe.remove(zeile);
+                iterator.remove();
             }
         }
     }
     public void loeschenNameMed(int antwort,String name) {
+        boolean medikamentGefunden = false;
         for (String[] zeile : fileListe) {
             if (zeile[0].equals(name)) {
                 fileListe.remove(zeile);
-            }
-            else{
-                System.out.println("Dieses Medikament existiert nicht                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ");
+                medikamentGefunden = true;
+                break;
             }
         }
-    }
+        if (!medikamentGefunden) {
+            System.out.println("Dieses Medikament existiert nicht");
+        }
+        }
+
     /**
      *
      * @param eingabe
@@ -423,7 +430,7 @@ public class Verwaltung extends Konsole {
     public void druckenInformationen(String dateiName, int eingabe) {
         ArrayList<String[]> sortierteListe = null;
 
-        if(eingabe == 1){
+        if(eingabe != 1){
             sortierteListe = sortierenName(fileListe);
         }else{
             sortierteListe = sortierenDatum(fileListe);
