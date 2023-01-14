@@ -15,7 +15,7 @@ public class Konsole {
      */
 
     public void start() {
-        verwaltung = new Verwaltung();
+        Verwaltung = new verwaltung();
         int eingabe;
         do {
             System.out.println("|-------------------------|");
@@ -117,7 +117,7 @@ public class Konsole {
      *
      */
     public void ausliefern() {
-        int groessevorbestellung = Verwaltung.getFileListe().size();
+        int groessevorbestellung = verwaltung.getFileListe().size();
 
         System.out.println("Wie viele Medikamente wollen Sie ausliefern?");
         System.out.print("Anzahl Medikamente: ");
@@ -140,11 +140,11 @@ public class Konsole {
 
         double summe = 0;
         System.out.println("Auslieferübersicht: ");
-        for(int i = groessevorbestellung; i < Verwaltung.getFileListe().size(); i++){
-            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
-                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
+        for(int i = groessevorbestellung; i < verwaltung.getFileListe().size(); i++){
+            System.out.println("Produktname: " + (verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (verwaltung.getFileListe().get(i))[1] +
+                    " Preis: " + (verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (verwaltung.getFileListe().get(i))[4]);
 
-            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
+            summe += Double.parseDouble((verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
         }
 
         System.out.println();
@@ -159,7 +159,7 @@ public class Konsole {
     public void bestellen() {
         System.out.println("Wie viele Medikamente wollen Sie bestellen?");
         System.out.print("Anzahl Medikamente: ");
-        int sizevorbestellung = Verwaltung.getFileListe().size();
+        int sizevorbestellung = verwaltung.getFileListe().size();
         int x = scanner.nextInt();
         for (int i = 0; i < x; i++){
 
@@ -175,11 +175,11 @@ public class Konsole {
 
         double summe = 0;
         System.out.println("Bestellübersicht: ");
-        for(int i = sizevorbestellung; i < Verwaltung.getFileListe().size(); i++){
-            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
-                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
+        for(int i = sizevorbestellung; i < verwaltung.getFileListe().size(); i++){
+            System.out.println("Produktname: " + (verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (verwaltung.getFileListe().get(i))[1] +
+                    " Preis: " + (verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (verwaltung.getFileListe().get(i))[4]);
 
-            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
+            summe += Double.parseDouble((verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
         }
 
         System.out.println();
