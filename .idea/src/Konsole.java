@@ -15,7 +15,7 @@ public class Konsole {
      */
 
     public void start() {
-        verwaltung = new verwaltung();
+        Verwaltung verwaltung = new Verwaltung();
         int eingabe;
         do {
             System.out.println("|-------------------------|");
@@ -166,7 +166,6 @@ public class Konsole {
             System.out.println(BLAU+"Was wollen Sie bestellen?"+STANDARD);
             System.out.print("Name: ");
             String name = scanner.next();
-
             System.out.print("Anzahl: ");
             String anzahl = scanner.next();
             verwaltung.bestellenMed(name, anzahl);
