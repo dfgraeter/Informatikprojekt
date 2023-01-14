@@ -3,16 +3,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Verwaltung extends Konsole{
+public class Verwaltung extends Konsole {
     private static final Date date = new Date();
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     private static final String datum = formatter.format(date);
-    private static final File file = new File(".idea/src/Files/Medikamentenliste");
-    private static final ArrayList<String[]> fileListe = new ArrayList<>();
+    private static final File file = new File("src/Files/Medikamentenliste");
+    private static ArrayList<String[]> fileListe = new ArrayList<>();
 
 
     public Verwaltung() {
-
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String zeile;
             while ((zeile = reader.readLine()) != null) {
@@ -27,16 +26,21 @@ public class Verwaltung extends Konsole{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+
+
+    /**
+     *
+     * @param name
+     * @param anzahl
+     */
     public void bestellenMed(String name, String anzahl) {
 
         double preis = (Math.round((Math.random() * 21.0 + 5.0) * 100.0) / 100.0);
         String preisMed = preis + "";
         String mindDatum;
-        double gesamtpreis = preis * Double.parseDouble(anzahl);
+        double gesamtpreis = (Math.round(preis * Double.parseDouble(anzahl) * 100.0)/100.0);
         String gesamtpreisMed = "" + gesamtpreis;
 
         if (date.getDay() < 10) {
@@ -48,19 +52,25 @@ public class Verwaltung extends Konsole{
         fileListe.add(neuesMedikament);
 
 
+
     }
 
+    /**
+     *
+     * @param name
+     * @param anzahl
+     * @throws IllegalArgumentException
+     */
     public void ausliefernMed(String name, String anzahl) throws IllegalArgumentException {
         int neueAnzahl;
         int auslieferAnzahl = Integer.parseInt(anzahl);
-        double gesamtpreis = 0.0;
 
         for (String[] zeile : fileListe) {
             if (zeile[0].equals(name)) {
                 int aktuelleAnzahl = Integer.parseInt(zeile[1]);
                 neueAnzahl = aktuelleAnzahl - auslieferAnzahl;
                 if (neueAnzahl < 0) {
-                    throw new IllegalArgumentException("Du kannst nicht mehr Medikamente ausliefern, als Medikamente im Lager sind.");
+                    throw new IllegalArgumentException("Du kannst nicht mehr Medikamente ausliefern, als Medikamente im Lager sind. Es sind " + zeile[1] + " im Lager.");
                 } else if (neueAnzahl == 0) {
                     fileListe.remove(zeile);
                 } else {
@@ -73,30 +83,23 @@ public class Verwaltung extends Konsole{
 
     }
 
-    public void loeschenMed(int eingabe) {
-        switch (eingabe) {
-            case 1:
-                for (String[] zeile : fileListe) {
-                    if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
-                        fileListe.remove(zeile);
-                    }
-                }
-                break;
-            case 2:
-                for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                    }
-                }
 
-                //Alternativ: fileListe.removeIf(zeile -> !ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0);
+    public void loeschenMed() {
 
 
+        //Alternativ: fileListe.removeIf(zeile -> !ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0);
+        for (String[] zeile : fileListe) {
+            if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
+                fileListe.remove(zeile);
+            }
         }
-    }
 
+
+    }
+    /**
+     *
+     * @param eingabe
+     */
     public void ausgabeSortierteInformationen(int eingabe) {
         ArrayList<String[]> sortierteListe = null;
 
@@ -123,10 +126,10 @@ public class Verwaltung extends Konsole{
         switch (eingabe) {
             case 1:
                 for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
+                    if (!ueberpruefenAbgelaufen(strings[3])){
                         System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
                                 "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    } else {
+                    }else{
                         System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
                                 "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
                     }
@@ -140,8 +143,6 @@ public class Verwaltung extends Konsole{
                         System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
                     }
                 }
-
-
                 break;
             case 3:
                 for (String[] strings : fileListe) {
@@ -170,7 +171,14 @@ public class Verwaltung extends Konsole{
 
     }
 
-    private void ausgabeInformationen(int eingabe, ArrayList<String[]> liste) {
+
+
+    /**
+     *
+     * @param eingabe
+     * @param liste
+     */
+    public void ausgabeInformationen(int eingabe, ArrayList<String[]> liste){
 
         switch (eingabe) {
             case 1:
@@ -222,7 +230,12 @@ public class Verwaltung extends Konsole{
 
     }
 
-
+    /**
+     *
+     * @param liste
+     * @return
+     * @throws IllegalArgumentException
+     */
     private static ArrayList<String[]> sortierenDatum(ArrayList<String[]> liste) throws IllegalArgumentException {
 
         if (liste.size() < 1) {
@@ -249,7 +262,12 @@ public class Verwaltung extends Konsole{
         return liste;
     }
 
-
+    /**
+     *
+     * @param liste
+     * @return
+     * @throws IllegalArgumentException
+     */
     private static ArrayList<String[]> sortierenName(ArrayList<String[]> liste) throws IllegalArgumentException {
 
 
@@ -294,8 +312,10 @@ public class Verwaltung extends Konsole{
         return date.before(dateMedi);
     }
 
-
-    public static void update() {
+    /**
+     *
+     */
+    public void update() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
             writer.write("Name;Anzahl;Preis;Mindesthaltbarkeitsdatum;Gesamtpreis");
@@ -314,12 +334,13 @@ public class Verwaltung extends Konsole{
 
     }
 
-    /**
-     * In eine neue File schreiben
-     */
 
+    /**
+     *
+     * @param dateiName
+     */
     public void druckenInformationen(String dateiName) {
-        File neueFile = new File(".idea/src/Files/" + dateiName);
+        File neueFile = new File("src/Files/" + dateiName);
         int gesamtAnzahl = 0;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
@@ -341,13 +362,19 @@ public class Verwaltung extends Konsole{
 
     }
 
+    /**
+     *
+     * @param dateiName
+     * @param buchstabe
+     * @throws IllegalArgumentException
+     */
     public void druckenInformationen(String dateiName, String buchstabe) throws IllegalArgumentException {
 
         if(buchstabe.length() > 1){
             throw new IllegalArgumentException();
         }
 
-        File neueFile = new File(".idea/src/Files/" + dateiName);
+        File neueFile = new File("src/Files/" + dateiName);
         buchstabe = buchstabe.toUpperCase();
         int anzahlmedikamente = 0;
         int gesamtAnzahl = 0;
@@ -383,6 +410,11 @@ public class Verwaltung extends Konsole{
 
     }
 
+    /**
+     *
+     * @param dateiName
+     * @param eingabe
+     */
     public void druckenInformationen(String dateiName, int eingabe) {
         ArrayList<String[]> sortierteListe = null;
 
@@ -391,7 +423,7 @@ public class Verwaltung extends Konsole{
         }else{
             sortierteListe = sortierenDatum(fileListe);
         }
-        File neueFile = new File(".idea/src/Files/" + dateiName);
+        File neueFile = new File("src/Files/" + dateiName);
         int gesamtAnzahl = 0;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
 
@@ -412,6 +444,13 @@ public class Verwaltung extends Konsole{
 
     }
 
+    /**
+     *
+     * @param dateiName
+     * @param buchstabe
+     * @param eingabe
+     * @throws IllegalArgumentException
+     */
     public void druckenInformationen(String dateiName, String buchstabe, int eingabe) throws IllegalArgumentException{
         if(buchstabe.length() > 1){
             throw new IllegalArgumentException();
@@ -423,7 +462,7 @@ public class Verwaltung extends Konsole{
         }else{
             sortierteListe = sortierenDatum(fileListe);
         }
-        File neueFile = new File(".idea/src/Files/" + dateiName);
+        File neueFile = new File("src/Files/" + dateiName);
         buchstabe = buchstabe.toUpperCase();
         int anzahlmedikamente = 0;
         int gesamtAnzahl = 0;
@@ -459,6 +498,10 @@ public class Verwaltung extends Konsole{
 
     }
 
+    /**
+     *
+     * @return
+     */
     public static ArrayList<String[]> getFileListe() {
         return fileListe;
     }

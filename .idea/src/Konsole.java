@@ -5,13 +5,17 @@ public class Konsole {
     public static final String BLAU = "\u001B[34m";
     public static final String STANDARD = "\u001B[0m";
     public static Scanner scanner = new Scanner(System.in);
+    Verwaltung verwaltung;
+
+
 
 
     /**
      * startet das Programm und dient als Hauptmenü, um zu entscheiden was man machen möchte
      */
-    public void start() {
 
+    public void start() {
+        verwaltung = new Verwaltung();
         int eingabe;
         do {
             System.out.println("|-------------------------|");
@@ -53,17 +57,106 @@ public class Konsole {
 
         System.out.println("Soll die File überschrieben werden?");
         System.out.println("1: Ja");
-        System.out.println("Irgendeine andere Eingabe steht für ein nein");
-
-        if(scanner.nextLine().equals("1")){
-            Verwaltung.update();
+        System.out.println("Irgendeine andere Zahl steht für ein nein");
+        eingabe = scanner.nextInt();
+        if(eingabe == 1){
+            verwaltung.update();
         }
 
 
     }
 
-    public static void bestellen() {
-        Verwaltung verwaltung = new Verwaltung();
+
+    /**
+     *
+     */
+    public  void informationen() {
+        int eingabe;
+        do {
+
+            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
+            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
+            System.out.println(ROT + "1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
+            System.out.println(ROT + "2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
+            System.out.println(ROT + "3: " + STANDARD + "Für alle Medikamente mit Anzahl");
+            System.out.println(ROT + "4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
+            System.out.println(ROT + "5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
+            eingabe = scanner.nextInt();
+            verwaltung.ausgabeInformationen(eingabe);
+
+        } while (eingabe != 0);
+    }
+
+
+    /**
+     *
+     */
+    public  void sortierenUndAusgeben(){
+        int eingabe;
+        do {
+
+            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
+            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
+            System.out.println(ROT + "1x" + STANDARD + "Sortieren nach Datum und dann eine der Optionen von unten");
+            System.out.println(ROT + "2x" + STANDARD + "Sortieren nach Name und dann eine der Optionen von unten");
+            System.out.println(ROT + "(1/2)1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
+            System.out.println(ROT + "(1/2)2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
+            System.out.println(ROT + "(1/2)3: " + STANDARD + "Für alle Medikamente mit Anzahl");
+            System.out.println(ROT + "(1/2)4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
+            System.out.println(ROT + "(1/2)5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
+            eingabe = scanner.nextInt();
+            verwaltung.ausgabeSortierteInformationen(eingabe);
+
+        } while (eingabe != 0);
+
+
+
+    }
+
+    /**
+     *
+     */
+    public void ausliefern() {
+        int groessevorbestellung = Verwaltung.getFileListe().size();
+
+        System.out.println("Wie viele Medikamente wollen Sie ausliefern?");
+        System.out.print("Anzahl Medikamente: ");
+        int x = scanner.nextInt();
+        try{
+        for (int i = 0; i < x; i++){
+
+            System.out.println(BLAU+"Was wollen Sie ausliefern?"+STANDARD);
+            System.out.print("Name: ");
+            String name = scanner.next();
+            System.out.print("Anzahl: ");
+            String anzahl = scanner.next();
+            verwaltung.ausliefernMed(name, anzahl);
+
+        }}catch(IllegalArgumentException e){
+            System.out.println(e.getMessage());
+
+        }
+
+
+        double summe = 0;
+        System.out.println("Auslieferübersicht: ");
+        for(int i = groessevorbestellung; i < Verwaltung.getFileListe().size(); i++){
+            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
+                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
+
+            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
+        }
+
+        System.out.println();
+        System.out.println("Sie erhalten: " + summe +"€ von Ihrem Kunden");
+
+
+    }
+
+    /**
+     *
+     */
+    public void bestellen() {
         System.out.println("Wie viele Medikamente wollen Sie bestellen?");
         System.out.print("Anzahl Medikamente: ");
         int sizevorbestellung = Verwaltung.getFileListe().size();
@@ -94,110 +187,21 @@ public class Konsole {
 
 
     }
+
     /**
      *
      */
-
-    public static void ausliefern() {
-        Verwaltung verwaltung = new Verwaltung();
-        System.out.println("Wie viele Medikamente wollen Sie ausliefern?");
-        System.out.print("Anzahl Medikamente: ");
-        int sizevorbestellung = Verwaltung.getFileListe().size();
-        int x = scanner.nextInt();
-        for (int i = 0; i < x; i++){
-
-            System.out.println(BLAU+"Was wollen Sie ausliefern?"+STANDARD);
-            System.out.print("Name: ");
-            String name = scanner.next();
-            System.out.print("Anzahl: ");
-            String anzahl = scanner.next();
-            verwaltung.ausliefernMed(name, anzahl);
-
-        }
-
-        double summe = 0;
-        System.out.println("Auslieferübersicht: ");
-        for(int i = sizevorbestellung; i < Verwaltung.getFileListe().size(); i++){
-            System.out.println("Produktname: " + (Verwaltung.getFileListe().get(i))[0] + " Anzahl: " + (Verwaltung.getFileListe().get(i))[1] +
-                    " Preis: " + (Verwaltung.getFileListe().get(i))[2] + " Gesamtpreis: " + (Verwaltung.getFileListe().get(i))[4]);
-
-            summe += Double.parseDouble((Verwaltung.getFileListe().get(i))[4].replace("{","").replace("," , "."));
-        }
-
+    public void loeschen() {
+        System.out.println(BLAU+"Welche Medikamente wollen Sie löschen"+STANDARD);
         System.out.println();
-        System.out.println("Sie erhalten: " + summe +"€ von Ihrem Kunden");
 
-
-    }
-    /**
-     *
-     */
-    public static void informationen() {
-        Verwaltung verwaltung = new Verwaltung();
-        int eingabe;
-        do {
-
-            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
-            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
-            System.out.println(ROT + "1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
-            System.out.println(ROT + "2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
-            System.out.println(ROT + "3: " + STANDARD + "Für alle Medikamente mit Anzahl");
-            System.out.println(ROT + "4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
-            System.out.println(ROT + "5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
-            eingabe = scanner.nextInt();
-            verwaltung.ausgabeInformationen(eingabe);
-
-        } while (eingabe != 0);
     }
 
     /**
      *
      */
-    public static void loeschen() {
-        Verwaltung verwaltung = new Verwaltung();
-        int eingabe;
-        do {
-        System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
-        System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
-        System.out.println(ROT + "1: " + STANDARD + "Löschen von allen Medikamenten deren Ablaufdatum überschritten ist");
-        System.out.println(ROT + "2: " + STANDARD + "Löschen von bestimmten Medikamenten");
-        eingabe = scanner.nextInt();
-        verwaltung.loeschenMed(eingabe);
+    public void drucken(){
 
-        } while (eingabe != 0);
-    }
-
-
-    /**
-     *
-     */
-    public static void sortierenUndAusgeben(){
-        Verwaltung verwaltung = new Verwaltung();
-        int eingabe;
-        do {
-
-            System.out.println(ROT + "0: " + STANDARD + "Hauptmenü");
-            System.out.println(BLAU + "Was wollen Sie wissen?" + STANDARD);
-            System.out.println(ROT + "1x" + STANDARD + "Sortieren nach Datum und dann eine der Optionen von unten");
-            System.out.println(ROT + "2x" + STANDARD + "Sortieren nach Name und dann eine der Optionen von unten");
-            System.out.println(ROT + "(1/2)1: " + STANDARD + "Für alle Medikamentennamen, Anzahl, Preise, Mindesthaltbarkeitsdatum und Gesamtpreis(Anzahl*Preis)");
-            System.out.println(ROT + "(1/2)2: " + STANDARD + "Für alle Medikamente mit dem Mindesthaltbarkeitsdatum");
-            System.out.println(ROT + "(1/2)3: " + STANDARD + "Für alle Medikamente mit Anzahl");
-            System.out.println(ROT + "(1/2)4: " + STANDARD + "Für alle Medikamente mit Anzahl und Preis");
-            System.out.println(ROT + "(1/2)5: " + STANDARD + "Für alle Medikamente mit Anzahl,Preis und dem Mindesthaltbarkeitsdatum");
-            eingabe = scanner.nextInt();
-            verwaltung.ausgabeSortierteInformationen(eingabe);
-
-        } while (eingabe != 0);
-
-
-
-    }
-
-
-    public static void drucken(){
-
-        Verwaltung verwaltung = new Verwaltung();
         System.out.println(BLAU+"Wie soll Ihre Datei heißen?"+STANDARD);
         System.out.print("Name: ");
         String dateiName = scanner.next();
@@ -236,14 +240,6 @@ public class Konsole {
                 verwaltung.druckenInformationen(dateiName,buchstabe,eingabe);
                 break;
         }
-
-
-
-
-
-
-
     }
-
 
 }
