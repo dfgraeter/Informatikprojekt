@@ -210,7 +210,7 @@ public class Konsole {
                 System.out.println("Nach welchem Medikament suchen Sie?");
                 System.out.println("Name: ");
                 String name = scanner.next();
-                verwaltung.loeschenNameMed(name);
+                verwaltung.loeschenNameMed(antwort, name);
                 break;
         }
 
