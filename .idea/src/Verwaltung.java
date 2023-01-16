@@ -8,8 +8,8 @@ public class Verwaltung extends Konsole {
     private static final Date date = new Date();
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     private static final String datum = formatter.format(date);
-    private static final File file = new File(".idea/src/Files/Medikamentenliste");
-    private static ArrayList<String[]> fileListe = new ArrayList<>();
+    private static final File file = new File("src/Files/Medikamentenliste");
+    private static final ArrayList<String[]> fileListe = new ArrayList<>();
 
 
     public Verwaltung() {
@@ -27,21 +27,42 @@ public class Verwaltung extends Konsole {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 
+    /**
+     * Nachdem die File sortiert wurde, wird sie durch diese Methode zurückgesetzt,
+     * um mit der ursprünglichen Datei weiter zuarbeiten.
+     */
+    public void resetFileListe() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String zeile;
+            while ((zeile = reader.readLine()) != null) {
+                if (zeile.contains("Name")) {
+                    continue;
+                } else {
+                    fileListe.add(zeile.split(";"));
+                }
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
-     *
-     * @param name
-     * @param anzahl
+     * @param name des Medikaments, welches bestellt wird
+     * @param anzahl des Medikaments, welches bestellt wird
      */
     public void bestellenMed(String name, String anzahl) {
 
         double preis = (Math.round((Math.random() * 21.0 + 5.0) * 100.0) / 100.0);
         String preisMed = preis + "";
         String mindDatum;
-        double gesamtpreis = (Math.round(preis * Double.parseDouble(anzahl) * 100.0)/100.0);
+        double gesamtpreis = (Math.round(preis * Double.parseDouble(anzahl) * 100.0) / 100.0);
         String gesamtpreisMed = "" + gesamtpreis;
 
         if (date.getDay() < 10) {
@@ -53,19 +74,18 @@ public class Verwaltung extends Konsole {
         fileListe.add(neuesMedikament);
 
 
-
     }
 
     /**
-     *
-     * @param name
-     * @param anzahl
-     * @throws IllegalArgumentException
+     * @param name des Medikaments, welches ausgeliefert werden soll
+     * @param anzahl des Medikaments, welches ausgeliefert werden soll
+     * @throws IllegalArgumentException, wenn man mehr ausliefern will als vorhanden ist,
+     * oder wenn das Medikament nicht gefunden wurde
      */
     public void ausliefernMed(String name, String anzahl) throws IllegalArgumentException {
         int neueAnzahl;
         int auslieferAnzahl = Integer.parseInt(anzahl);
-
+        boolean vorhanden = false;
         for (String[] zeile : fileListe) {
             if (zeile[0].equals(name)) {
                 int aktuelleAnzahl = Integer.parseInt(zeile[1]);
@@ -77,24 +97,111 @@ public class Verwaltung extends Konsole {
                 } else {
                     zeile[1] = neueAnzahl + "";
                 }
+                vorhanden = true;
                 break;
             }
         }
-
+        if (!vorhanden) {
+            throw new IllegalArgumentException("Das Medikament konnte nicht gefunden werden");
+        }
 
     }
 
 
+    /**
+     * @param eingabe
+     */
+    public void ausgabeSortierteInformationen(int eingabe) {
+        try {
+            if (eingabe > 20) {
+                sortierenName(fileListe);
+                eingabe -= 20;
+            } else if (eingabe > 10) {
+                sortierenDatum(fileListe);
+                eingabe -= 10;
+            }
+            ausgabeInformationen(eingabe);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Gibt in der Konsole die angeforderten Daten aus
+     * @param eingabe gibt an was man wissen möchte
+     */
+    public void ausgabeInformationen(int eingabe) {
+
+        switch (eingabe) {
+            case 1:
+                for (String[] strings : fileListe) {
+                    if (!ueberpruefenAbgelaufen(strings[3])) {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
+                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
+                    } else {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
+                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
+                    }
+                }
+                break;
+            case 2:
+                for (String[] strings : fileListe) {
+                    if (!ueberpruefenAbgelaufen(strings[3])) {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
+                    } else {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
+                    }
+                }
+                break;
+            case 3:
+                for (String[] strings : fileListe) {
+                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD);
+                }
+                break;
+            case 4:
+                for (String[] strings : fileListe) {
+                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD);
+                }
+
+                break;
+            case 5:
+                for (String[] strings : fileListe) {
+                    if (!ueberpruefenAbgelaufen(strings[3])) {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
+                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
+                    } else {
+                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
+                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
+                    }
+                }
+                break;
+
+        }
+
+    }
+
+
+    /**
+     *
+     */
     public void loeschenMed() {
+
         Iterator<String[]> iterator = fileListe.iterator();
-        while (((Iterator<?>) iterator).hasNext()) {
+        while (iterator.hasNext()) {
             String[] zeile = iterator.next();
             if (!ueberpruefenAbgelaufen(zeile[3]) || Integer.parseInt(zeile[1]) == 0) {
                 iterator.remove();
             }
         }
+
+
     }
-    public void loeschenNameMed(String name) {
+
+    /**
+     * @param name
+     */
+    public void loeschenMed(String name) {
         Iterator<String[]> iterator = fileListe.iterator();
         boolean found = false;
         while (iterator.hasNext()) {
@@ -105,149 +212,170 @@ public class Verwaltung extends Konsole {
                 break;
             }
         }
-        if(found) {
+        if (found) {
             System.out.println("Medikament " + name + " erfolgreich gelöscht.");
         } else {
             System.out.println("Medikament " + name + " konnte nicht gefunden werden.");
         }
     }
 
+
     /**
-     *
+     * @param dateiName
+     */
+    public void druckenInformationen(String dateiName) {
+        File neueFile = new File("src/Files/" + dateiName);
+        int gesamtAnzahl = 0;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
+
+            writer.write("Heute ist der: " + datum);
+            writer.newLine();
+            for (String[] zeile : fileListe) {
+                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                        " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
+                writer.newLine();
+                gesamtAnzahl += Integer.parseInt(zeile[1]);
+            }
+            writer.write("Insgesamte Anzahl an Medizinischen Produkten im Lager: " + gesamtAnzahl);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * @param dateiName
+     * @param buchstabe
+     * @throws IllegalArgumentException
+     */
+    public void druckenInformationen(String dateiName, String buchstabe) throws IllegalArgumentException {
+
+        if (buchstabe.length() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        File neueFile = new File("src/Files/" + dateiName);
+        buchstabe = buchstabe.toUpperCase();
+        int anzahlmedikamente = 0;
+        int gesamtAnzahl = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
+            writer.write("Heute ist der: " + datum);
+            writer.newLine();
+            for (String[] zeile : fileListe) {
+                if (zeile[0].startsWith(buchstabe)) {
+                    writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                            " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
+                    writer.newLine();
+                    anzahlmedikamente++;
+                    gesamtAnzahl += Integer.parseInt(zeile[1]);
+                }
+            }
+
+            if (anzahlmedikamente > 0) {
+                writer.write("In Ihrem Lager befinden sich " + anzahlmedikamente + " Medikamente, welche den Anfangsbuchstaben "
+                        + buchstabe + " besitzen.");
+                writer.newLine();
+                writer.write("Insgesamt sind es " + gesamtAnzahl + " von diesen Medikamenten.");
+            } else {
+                writer.write("Es befinden sich keine Medikamente mit dem Anfangsbuchstaben " + buchstabe + " in Ihrem Besitz");
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * @param dateiName
      * @param eingabe
      */
-    public void ausgabeSortierteInformationen(int eingabe) {
-        ArrayList<String[]> sortierteListe = null;
+    public void druckenInformationen(String dateiName, int eingabe) {
 
-        if (eingabe > 20) {
-            sortierteListe = sortierenName(fileListe);
-            eingabe -= 20;
-        } else if (eingabe > 10) {
-            sortierteListe = sortierenDatum(fileListe);
-            eingabe -= 10;
+
+        if (eingabe == 1) {
+            sortierenName(fileListe);
+        } else {
+            sortierenDatum(fileListe);
         }
+        File neueFile = new File("src/Files/" + dateiName);
+        int gesamtAnzahl = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
 
-        ausgabeInformationen(eingabe, sortierteListe);
+            writer.write("Heute ist der: " + datum);
+            writer.newLine();
+            for (String[] zeile : fileListe) {
+                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                        " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
+                writer.newLine();
+                gesamtAnzahl += Integer.parseInt(zeile[1]);
+            }
+            writer.write("Insgesamte Anzahl an Medizinischen Produkten im Lager: " + gesamtAnzahl);
 
 
-    }
-
-    /**
-     * Gibt in der Konsole die angeforderten Daten aus
-     *
-     * @param eingabe gibt an was man wissen möchte
-     */
-    public void ausgabeInformationen(int eingabe) {
-
-        switch (eingabe) {
-            case 1:
-                for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])){
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    }else{
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    }
-                }
-                break;
-            case 2:
-                for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                    }
-                }
-                break;
-            case 3:
-                for (String[] strings : fileListe) {
-                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD);
-                }
-                break;
-            case 4:
-                for (String[] strings : fileListe) {
-                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD);
-                }
-
-                break;
-            case 5:
-                for (String[] strings : fileListe) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                    }
-                }
-                break;
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
-
-
     /**
-     *
+     * @param dateiName
+     * @param buchstabe
      * @param eingabe
-     * @param liste
+     * @throws IllegalArgumentException wenn der buchstabe ungleich 1
      */
-    public void ausgabeInformationen(int eingabe, ArrayList<String[]> liste){
-
-        switch (eingabe) {
-            case 1:
-                for (String[] strings : liste) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tEinzelpreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD + "\tGesamtpreis: " + BLAU + strings[4] + STANDARD);
-                    }
-                }
-                break;
-            case 2:
-                for (String[] strings : liste) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                    }
-                }
-
-
-                break;
-            case 3:
-                for (String[] strings : liste) {
-                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD);
-                }
-                break;
-            case 4:
-                for (String[] strings : liste) {
-                    System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD);
-                }
-
-                break;
-            case 5:
-                for (String[] strings : liste) {
-                    if (!ueberpruefenAbgelaufen(strings[3])) {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + ROT + strings[3] + STANDARD);
-                    } else {
-                        System.out.println("Name: " + BLAU + strings[0] + STANDARD + "\tAnzahl: " + BLAU + strings[1] + STANDARD + "\tPreis: " + BLAU + strings[2] + STANDARD +
-                                "\tMindesthaltbarkeitsdatum: " + BLAU + strings[3] + STANDARD);
-                    }
-                }
-                break;
-
+    public void druckenInformationen(String dateiName, String buchstabe, int eingabe) throws IllegalArgumentException {
+        if (buchstabe.length() != 1) {
+            throw new IllegalArgumentException();
         }
+
+        if (eingabe == 1) {
+            sortierenName(fileListe);
+        } else {
+            sortierenDatum(fileListe);
+        }
+        File neueFile = new File("src/Files/" + dateiName);
+        buchstabe = buchstabe.toUpperCase();
+        int anzahlmedikamente = 0;
+        int gesamtAnzahl = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
+            writer.write("Heute ist der: " + datum);
+            writer.newLine();
+            for (String[] zeile : fileListe) {
+                if (zeile[0].startsWith(buchstabe)) {
+                    writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
+                            " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
+                    writer.newLine();
+                    anzahlmedikamente++;
+                    gesamtAnzahl += Integer.parseInt(zeile[1]);
+                }
+            }
+
+            if (anzahlmedikamente > 0) {
+                writer.write("In Ihrem Lager befinden sich " + anzahlmedikamente + " Medikamente, welche den Anfangsbuchstaben "
+                        + buchstabe + " besitzen.");
+                writer.newLine();
+                writer.write("Insgesamt sind es " + gesamtAnzahl + " von diesen Medikamenten.");
+            } else {
+                writer.write("Es befinden sich keine Medikamente mit dem Anfangsbuchstaben " + buchstabe + " in Ihrem Besitz");
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
+
     /**
-     *
      * @param liste
      * @return
      * @throws IllegalArgumentException
@@ -279,7 +407,6 @@ public class Verwaltung extends Konsole {
     }
 
     /**
-     *
      * @param liste
      * @return
      * @throws IllegalArgumentException
@@ -352,188 +479,24 @@ public class Verwaltung extends Konsole {
 
 
     /**
-     *
-     * @param dateiName
-     */
-    public void druckenInformationen(String dateiName) {
-        BufferedWriter writer = null;
-        File file = new File("src/Files");
-        if(!file.exists()){
-            file.mkdir();
-        }
-        File neueFile = new File("src/Files/" + dateiName);
-        if (fileListe.isEmpty()) {
-            System.out.println("Die Liste ist leer, es kann keine Datei erstellt werden.");
-            return;
-        }
-        try {
-            int gesamtAnzahl = 0;
-
-            writer = new BufferedWriter(new FileWriter(neueFile));
-            writer.write("Heute ist der: " + datum);
-            writer.newLine();
-            for (String[] zeile : fileListe) {
-                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
-                        " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
-                writer.newLine();
-                gesamtAnzahl += Integer.parseInt(zeile[1]);
-            }
-            writer.write("Insgesamte Anzahl an Medizinischen Produkten im Lager: " + gesamtAnzahl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-
-    /**
-     *
-     * @param dateiName
-     * @param buchstabe
-     * @throws IllegalArgumentException
-     */
-    public void druckenInformationen(String dateiName, String buchstabe) throws IllegalArgumentException {
-
-        if(buchstabe.length() > 1){
-            throw new IllegalArgumentException();
-        }
-
-        File neueFile = new File("src/Files/" + dateiName);
-        buchstabe = buchstabe.toUpperCase();
-        int anzahlmedikamente = 0;
-        int gesamtAnzahl = 0;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
-            writer.write("Heute ist der: " + datum);
-            writer.newLine();
-            for (String[] zeile : fileListe) {
-                if (zeile[0].startsWith(buchstabe)) {
-                    writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
-                            " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
-                    writer.newLine();
-                    anzahlmedikamente++;
-                    gesamtAnzahl += Integer.parseInt(zeile[1]);
-                }
-            }
-
-            if(anzahlmedikamente > 0){
-                writer.write("In Ihrem Lager befinden sich " + anzahlmedikamente + " Medikamente, welche den Anfangsbuchstaben "
-                        + buchstabe + " besitzen.");
-                writer.newLine();
-                writer.write("Insgesamt sind es " + gesamtAnzahl + " von diesen Medikamenten.");
-            }else{
-                writer.write("Es befinden sich keine Medikamente mit dem Anfangsbuchstaben " + buchstabe + " in Ihrem Besitz");
-            }
-
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    /**
-     *
-     * @param dateiName
-     * @param eingabe
-     */
-    public void druckenInformationen(String dateiName, int eingabe) {
-        ArrayList<String[]> sortierteListe = null;
-
-        if(eingabe != 1){
-            sortierteListe = sortierenName(fileListe);
-        }else{
-            sortierteListe = sortierenDatum(fileListe);
-        }
-        File neueFile = new File("src/Files/" + dateiName);
-        int gesamtAnzahl = 0;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
-
-            writer.write("Heute ist der: " + datum);
-            writer.newLine();
-            for (String[] zeile : sortierteListe) {
-                writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
-                        " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
-                writer.newLine();
-                gesamtAnzahl += Integer.parseInt(zeile[1]);
-            }
-            writer.write("Insgesamte Anzahl an Medizinischen Produkten im Lager: " + gesamtAnzahl);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     *
-     * @param dateiName
-     * @param buchstabe
-     * @param eingabe
-     * @throws IllegalArgumentException
-     */
-    public void druckenInformationen(String dateiName, String buchstabe, int eingabe) throws IllegalArgumentException{
-        if(buchstabe.length() > 1){
-            throw new IllegalArgumentException();
-        }
-        ArrayList<String[]> sortierteListe = null;
-
-        if(eingabe == 1){
-            sortierteListe = sortierenName(fileListe);
-        }else{
-            sortierteListe = sortierenDatum(fileListe);
-        }
-        File neueFile = new File("src/Files/" + dateiName);
-        buchstabe = buchstabe.toUpperCase();
-        int anzahlmedikamente = 0;
-        int gesamtAnzahl = 0;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(neueFile))) {
-            writer.write("Heute ist der: " + datum);
-            writer.newLine();
-            for (String[] zeile : sortierteListe) {
-                if (zeile[0].startsWith(buchstabe)) {
-                    writer.write("Name: " + zeile[0] + " Anzahl: " + zeile[1] + " Preis: " + zeile[2] +
-                            " Mindesthaltbarkeitsdatum: " + zeile[3] + " Gesamtpreis: " + zeile[4]);
-                    writer.newLine();
-                    anzahlmedikamente++;
-                    gesamtAnzahl += Integer.parseInt(zeile[1]);
-                }
-            }
-
-            if(anzahlmedikamente > 0){
-                writer.write("In Ihrem Lager befinden sich " + anzahlmedikamente + " Medikamente, welche den Anfangsbuchstaben "
-                        + buchstabe + " besitzen.");
-                writer.newLine();
-                writer.write("Insgesamt sind es " + gesamtAnzahl + " von diesen Medikamenten.");
-            }else{
-                writer.write("Es befinden sich keine Medikamente mit dem Anfangsbuchstaben " + buchstabe + " in Ihrem Besitz");
-            }
-
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    /**
-     *
-     * @return
+     * @return fileListe
      */
     public static ArrayList<String[]> getFileListe() {
         return fileListe;
+    }
+
+    /**
+     * @param name
+     * @return
+     */
+    public double getPreis(String name) {
+        for (String[] zeile : fileListe) {
+            if (zeile[0].equals(name)) {
+                return Double.parseDouble(zeile[2].replace("€", "").replace(",", "."));
+            }
+
+
+        }
+        return 0;
     }
 }
