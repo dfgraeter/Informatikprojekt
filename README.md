@@ -83,10 +83,3 @@ Führe das Programm aus:
 
    - Geben Sie den Dateinamen an, unter dem Sie die Informationen drucken möchten.
    - Wählen Sie, welche Art von Informationen Sie drucken möchten.
-
-## Lizenz
-
-[MIT](LICENSE)
-```
-
-Dieser Code kann direkt in die `README.md`-Datei des GitHub-Repositories kopiert werden.
